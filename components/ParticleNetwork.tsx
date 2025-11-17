@@ -9,7 +9,7 @@ function Particles() {
   const linesRef = useRef<THREE.LineSegments>(null);
 
   const particleCount = 100;
-  const maxDistance = 15;
+  const maxDistance = 11;
 
   const particles = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);

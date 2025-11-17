@@ -7,71 +7,18 @@ import ParticleNetwork from './ParticleNetwork';
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setIsVisible(true);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: (e.clientY / window.innerHeight) * 2 - 1,
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   return (
     <section
-      className="relative min-h-screen flex items-center pt-20 overflow-hidden"
+      className="relative min-h-screen flex items-center pt-20"
     >
-      {/* Animated gradient orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute top-1/4 -left-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 rounded-full blur-3xl animate-pulse"
-          style={{
-            transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
-            transition: 'transform 0.3s ease-out',
-          }}
-        ></div>
-        <div
-          className="absolute top-1/3 -right-1/4 w-96 h-96 bg-gradient-to-l from-purple-500/30 to-pink-500/30 rounded-full blur-3xl animate-pulse"
-          style={{
-            transform: `translate(${mousePosition.x * -30}px, ${mousePosition.y * -30}px)`,
-            transition: 'transform 0.3s ease-out',
-            animationDelay: '1s',
-          }}
-        ></div>
-        <div
-          className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-gradient-to-t from-orange-500/20 to-yellow-500/20 rounded-full blur-3xl animate-pulse"
-          style={{
-            transform: `translate(${mousePosition.x * 15}px, ${mousePosition.y * 15}px)`,
-            transition: 'transform 0.3s ease-out',
-            animationDelay: '2s',
-          }}
-        ></div>
-      </div>
-
       <ParticleNetwork />
-
-      {/* Multi-layer gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/50 via-blue-900/30 to-purple-900/40 pointer-events-none"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/5 to-transparent pointer-events-none"></div>
-
-      {/* Grid pattern overlay */}
-      <div
-        className="absolute inset-0 opacity-20 pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(99, 102, 241, 0.1) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(99, 102, 241, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-        }}
-      ></div>
-
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/30 to-blue-900/20 pointer-events-none"></div>
+      
       <div className="relative w-full px-6">
         <div className="max-w-6xl mx-auto">
           <div className="max-w-4xl mx-auto">
@@ -160,9 +107,8 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Enhanced bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/40 via-black/20 to-transparent"></div>
+      
+      <div className="absolute bottom-0 left-1 right-0 h-24 bg-gradient-to-t from-black/20 to-transparent"></div>
     </section>
   );
 }

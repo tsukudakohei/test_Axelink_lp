@@ -10,21 +10,21 @@ export default function Header() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="cursor-pointer">
-              <img 
-                src="https://static.readdy.ai/image/079662e86cc1d0cda5f94cae0351bd2c/38e65b87e765ee6c5b132d3b70e2116b.png" 
-                alt="Axelink" 
-                className="h-8"
+              <img
+                src="/Axelink_Bg.svg"
+                alt="Axelink"
+                className="h-9"
               />
             </Link>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/#services" className="text-[#1F2A44] hover:text-[#F49B28] transition-colors cursor-pointer">
+            <Link href="/#services" className="text-[#1F2A44] hover:text-[#F49B28] transition-colors cursor-pointer font-bold">
               サービス
             </Link>
-            <Link href="/#process" className="text-[#1F2A44] hover:text-[#F49B28] transition-colors cursor-pointer">
+            <Link href="/#process" className="text-[#1F2A44] hover:text-[#F49B28] transition-colors cursor-pointer font-bold">
               導入フロー
             </Link>
-            <Link href="/#faq" className="text-[#1F2A44] hover:text-[#F49B28] transition-colors cursor-pointer">
+            <Link href="/#faq" className="text-[#1F2A44] hover:text-[#F49B28] transition-colors cursor-pointer font-bold">
               FAQ
             </Link>
           </nav>

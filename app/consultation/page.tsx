@@ -14,7 +14,7 @@ export default function ConsultationPage() {
           <div className="max-w-4xl mx-auto px-6">
             <div className="text-center mb-12">
               <h1 className="text-4xl font-bold text-[#1F2A44] mb-6">
-                無料相談のお申し込み
+                お問い合わせ
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 30〜45分でAI活用の課題を整理し、最短の進め方をご提案いたします

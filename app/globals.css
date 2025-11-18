@@ -2,3 +2,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ichisan.jpサジェストポップアップのカスタマイズ */
+/* 法人番号、従業員数、インボイス番号を非表示 */
+.ichisan-suggest-item .company-id,
+.ichisan-suggest-item .employee-num,
+.ichisan-suggest-item .invoice-id,
+.ichisan-popup .company-id,
+.ichisan-popup .employee-num,
+.ichisan-popup .invoice-id {
+  display: none !important;
+}

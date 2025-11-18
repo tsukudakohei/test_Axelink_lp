@@ -10,26 +10,15 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div className="md:col-span-2">
             <div className="flex items-center mb-4">
-              <img 
-                src="https://static.readdy.ai/image/079662e86cc1d0cda5f94cae0351bd2c/38e65b87e765ee6c5b132d3b70e2116b.png" 
-                alt="Axelink" 
+              <img
+                src="/Axelink_Bg.svg"
+                alt="Axelink"
                 className="h-8"
               />
             </div>
-            <p className="text-gray-600 mb-6 leading-relaxed max-w-md">
+            <p className="text-gray-600 leading-relaxed max-w-md">
               AI導入のパートナーとして、あなたの事業を加速します。
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#F49B28] hover:text-white transition-colors cursor-pointer">
-                <i className="ri-twitter-line text-lg"></i>
-              </a>
-              <a href="#" className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#F49B28] hover:text-white transition-colors cursor-pointer">
-                <i className="ri-linkedin-line text-lg"></i>
-              </a>
-              <a href="#" className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#F49B28] hover:text-white transition-colors cursor-pointer">
-                <i className="ri-facebook-line text-lg"></i>
-              </a>
-            </div>
           </div>
           
           <div>
@@ -38,7 +27,7 @@ export default function Footer() {
               <li><a href="#" className="text-gray-600 hover:text-[#1F2A44] transition-colors cursor-pointer">AxelAgent</a></li>
               <li><a href="#" className="text-gray-600 hover:text-[#1F2A44] transition-colors cursor-pointer">AxelConsulting</a></li>
               <li><a href="#" className="text-gray-600 hover:text-[#1F2A44] transition-colors cursor-pointer">AxelMarket</a></li>
-              <li><Link href="/consultation" className="text-gray-600 hover:text-[#1F2A44] transition-colors cursor-pointer">無料相談</Link></li>
+              <li><Link href="/consultation" className="text-gray-600 hover:text-[#1F2A44] transition-colors cursor-pointer">お問い合わせ</Link></li>
             </ul>
           </div>
           
@@ -64,6 +53,9 @@ export default function Footer() {
                   info@bizlink.io
                 </a>
               </li>
+              <li className="text-gray-600">
+                URL: https://corp.bizlink.io/
+              </li>
             </ul>
           </div>
         </div>
@@ -71,10 +63,8 @@ export default function Footer() {
         <div className="border-t border-gray-300 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex flex-wrap gap-6 text-sm text-gray-600">
-              <Link href="#" className="hover:text-[#1F2A44] transition-colors cursor-pointer">プライバシーポリシー</Link>
-              <Link href="#" className="hover:text-[#1F2A44] transition-colors cursor-pointer">利用規約</Link>
-              <Link href="#" className="hover:text-[#1F2A44] transition-colors cursor-pointer">特定商取引法</Link>
-              <Link href="https://readdy.ai/?origin=logo" className="hover:text-[#1F2A44] transition-colors cursor-pointer">Made with Readdy</Link>
+              <Link href="https://freelance.bizlink.io/privacy" className="hover:text-[#1F2A44] transition-colors cursor-pointer">プライバシーポリシー</Link>
+              <Link href="https://freelance.bizlink.io/terms" className="hover:text-[#1F2A44] transition-colors cursor-pointer">利用規約</Link>
             </div>
             <p className="text-sm text-gray-600">
               © 2024 株式会社ビズリンク. All rights reserved.

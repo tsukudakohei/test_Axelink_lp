@@ -1,0 +1,10 @@
+name = "axelink-lp"
+compatibility_date = "2024-01-01"
+
+# @cloudflare/next-on-pagesに必要な互換性フラグ
+compatibility_flags = ["nodejs_compat"]
+
+# Cloudflare Pages/Workers用の設定
+# 注意: wrangler pages deploy コマンドでは出力ディレクトリを直接指定するため、
+# pages_build_output_dir は設定ファイルではなくコマンドライン引数で指定します
+

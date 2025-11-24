@@ -1,10 +1,10 @@
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Pacifico } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import IchisanFormScript from "@/components/IchisanFormScript";
 
 const pacifico = Pacifico({
   weight: '400',
@@ -77,7 +77,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <Script src="https://ichisan.jp/form/lib/ichisanForm.min.js" strategy="afterInteractive" />
+        <IchisanFormScript />
       </body>
     </html>
   );

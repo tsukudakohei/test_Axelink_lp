@@ -1,14 +1,11 @@
 
 'use client';
 
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
 import ConsultationForm from './ConsultationForm';
 
 export default function ConsultationPage() {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <main className="pt-20">
         <div className="py-16 bg-gray-50">
           <div className="max-w-4xl mx-auto px-6">
@@ -68,7 +65,6 @@ export default function ConsultationPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

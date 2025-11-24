@@ -83,18 +83,16 @@ function Particles() {
     );
   });
 
+  const geometry = useMemo(() => {
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', new THREE.BufferAttribute(particles.positions, 3));
+    return geom;
+  }, [particles.positions]);
+
   return (
     <>
       {/* Particles */}
-      <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={particleCount}
-            array={particles.positions}
-            itemSize={3}
-          />
-        </bufferGeometry>
+      <points ref={pointsRef} geometry={geometry}>
         <pointsMaterial
           size={0.3}
           color="#22d3ee"

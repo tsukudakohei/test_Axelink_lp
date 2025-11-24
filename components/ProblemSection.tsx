@@ -53,11 +53,11 @@ export default function ProblemSection() {
         </div>
         
         {/* スムーズな遷移セクション */}
-        <div className="text-center mb-16">
+        {/* <div className="text-center mb-16">
           <div className="max-w-3xl mx-auto">
             <div className="w-1 h-16 bg-gradient-to-b from-red-400 to-[#F49B28] mx-auto mb-8"></div>
           </div>
-        </div>
+        </div> */}
         
         {/* 解決メッセージ */}
         <div className="text-center max-w-5xl mx-auto">

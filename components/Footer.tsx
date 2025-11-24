@@ -67,7 +67,7 @@ export default function Footer() {
               <Link href="https://freelance.bizlink.io/terms" className="hover:text-[#1F2A44] transition-colors cursor-pointer">利用規約</Link>
             </div>
             <p className="text-sm text-gray-600">
-              © 2024 株式会社ビズリンク. All rights reserved.
+              © 2025 株式会社ビズリンク. All rights reserved.
             </p>
           </div>
         </div>

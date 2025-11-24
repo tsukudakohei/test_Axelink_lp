@@ -18,6 +18,116 @@ export default function ConsultationForm() {
   const [phoneError, setPhoneError] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const companyInputRef = useRef<HTMLInputElement>(null);
+  const [isIchisanReady, setIsIchisanReady] = useState(false);
+
+  // ichisanフォームのスクリプトが読み込まれたか確認し、初期化する
+  useEffect(() => {
+    const initializeIchisanForm = () => {
+      const form = formRef.current;
+      if (!form) return false;
+
+      // ichisanFormがグローバルに存在するか確認
+      if (typeof window !== 'undefined' && (window as any).ichisanForm) {
+        setIsIchisanReady(true);
+        
+        // フォームが既に初期化されているか確認
+        if (form.hasAttribute('data-ichisan-initialized')) {
+          return true;
+        }
+
+        // 複数の初期化方法を試す
+        try {
+          // 方法1: initメソッドがある場合
+          if (typeof (window as any).ichisanForm.init === 'function') {
+            (window as any).ichisanForm.init(form);
+            form.setAttribute('data-ichisan-initialized', 'true');
+            return true;
+          }
+          
+          // 方法2: 自動初期化をトリガー（data-readdy-form属性を再設定）
+          if (form.hasAttribute('data-readdy-form')) {
+            form.removeAttribute('data-readdy-form');
+            // 次のフレームで再設定して初期化をトリガー
+            requestAnimationFrame(() => {
+              form.setAttribute('data-readdy-form', '');
+              form.setAttribute('data-ichisan-initialized', 'true');
+            });
+            return true;
+          }
+        } catch (error) {
+          console.error('ichisanフォームの初期化エラー:', error);
+        }
+      }
+      return false;
+    };
+
+    // カスタムイベントリスナーを設定
+    const handleIchisanLoaded = () => {
+      setTimeout(initializeIchisanForm, 100);
+    };
+
+    // 既に読み込まれている場合
+    if (typeof window !== 'undefined' && (window as any).__ichisanFormLoaded) {
+      setTimeout(initializeIchisanForm, 100);
+    } else {
+      // カスタムイベントをリッスン
+      document.addEventListener('ichisanFormLoaded', handleIchisanLoaded);
+    }
+
+    // スクリプトの読み込みを待つ
+    let interval: NodeJS.Timeout | null = null;
+    let loadHandler: (() => void) | null = null;
+
+    const checkScript = () => {
+      const script = document.querySelector('script[src*="ichisanForm.min.js"]');
+      if (script) {
+        if (script.getAttribute('data-loaded') === 'true' || (window as any).__ichisanFormLoaded) {
+          // スクリプトは既に読み込まれている
+          setTimeout(initializeIchisanForm, 200);
+          return;
+        }
+        
+        loadHandler = () => {
+          script.setAttribute('data-loaded', 'true');
+          // 少し遅延を入れて初期化を確実にする
+          setTimeout(initializeIchisanForm, 200);
+        };
+        script.addEventListener('load', loadHandler);
+      } else {
+        // スクリプトがまだない場合、定期的にチェック
+        interval = setInterval(() => {
+          if (initializeIchisanForm()) {
+            if (interval) clearInterval(interval);
+          }
+        }, 200);
+
+        // 最大10秒待つ
+        setTimeout(() => {
+          if (interval) clearInterval(interval);
+        }, 10000);
+      }
+    };
+
+    // DOMが準備できてからチェック
+    if (document.readyState === 'complete') {
+      checkScript();
+    } else {
+      window.addEventListener('load', checkScript);
+    }
+
+    // クリーンアップ
+    return () => {
+      if (interval) clearInterval(interval);
+      if (loadHandler) {
+        const script = document.querySelector('script[src*="ichisanForm.min.js"]');
+        if (script) {
+          script.removeEventListener('load', loadHandler);
+        }
+      }
+      window.removeEventListener('load', checkScript);
+      document.removeEventListener('ichisanFormLoaded', handleIchisanLoaded);
+    };
+  }, []);
 
   // ichisan.jpがサジェストから選択した時にstateを更新
   useEffect(() => {
@@ -40,7 +150,7 @@ export default function ConsultationForm() {
       companyInput.removeEventListener('input', handleCompanyChange);
       companyInput.removeEventListener('autocompleteselect', handleCompanyChange);
     };
-  }, []);
+  }, [isIchisanReady]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

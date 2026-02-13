@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge';
-
 // セミナー設定を一元管理
 const SEMINAR_CONFIGS: Record<string, any> = {
   '20260224': {
@@ -38,9 +36,10 @@ const SEMINAR_CONFIGS: Record<string, any> = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
+  const params = await context.params;
+  const { id } = params;
 
   const config = SEMINAR_CONFIGS[id];
 

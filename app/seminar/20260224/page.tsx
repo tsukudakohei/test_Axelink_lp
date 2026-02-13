@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Turnstile } from '@marsidev/react-turnstile';
 import Script from 'next/script';
 
 interface SeminarConfig {
@@ -29,33 +28,39 @@ interface SeminarConfig {
   };
 }
 
+// セミナー設定を直接定義
+const SEMINAR_CONFIG: SeminarConfig = {
+  seminar_name: '生成AIを実務の武器に変える「業務解像度」向上セミナー',
+  event_date: '2026-02-24',
+  event_date_display: '2026年2月24日（火）15:00〜16:00',
+  event_datetime: '2026-02-24T15:00:00+09:00',
+  seminar_type: 'セミナー',
+  event_format: 'オンライン',
+  seminar_url: 'https://us06web.zoom.us/webinar/register/WN_TfEYFMxVS_2qwBuNvaV2pA',
+  title: '生成AIを実務の武器に変える「業務解像度」向上セミナー',
+  description: '本セミナーは、最新ツールの紹介やプロンプトの丸暗記を目的としたものではありません。生成AIを「優秀な部下」として使いこなし、実務で確かな成果を出すために不可欠な「業務を設計する力」を習得するための実践的プログラムです。',
+  image: '/ai-seminar-20260224.png',
+  schedule: {
+    date: '2026年2月24日（火）15：00〜16：00',
+    format: 'オンライン開催',
+    note: '※お申し込みいただいた方に別途URLをお送りいたします。',
+  },
+  target_audience: [
+    '組織の生産性を高めたい、事業責任者・マネジメント層の方',
+    'YouTubeやセミナーで勉強したが、実務への応用がうまくいかない方',
+    '自社でAIは導入されているが、日常業務で活用の糸口が掴めない方',
+  ],
+  overview: {
+    name: '生成AIを実務の武器に変える「業務解像度」向上セミナー',
+    date: '2026年2月24日（火）15:00〜16:00',
+    format: 'オンライン開催（ウェビナー）',
+    organizer: '株式会社ビズリンク',
+  },
+};
+
 export default function SeminarPage() {
-  const [turnstileToken, setTurnstileToken] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [seminarConfig, setSeminarConfig] = useState<SeminarConfig | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const turnstileRef = useRef<any>(null);
-
-  // セミナー設定を取得
-  useEffect(() => {
-    const fetchSeminarConfig = async () => {
-      try {
-        const response = await fetch('/api/seminar/config/20260224');
-        const result = await response.json();
-        if (result.success) {
-          setSeminarConfig(result.data);
-        } else {
-          console.error('Failed to fetch seminar config');
-        }
-      } catch (error) {
-        console.error('Error fetching seminar config:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSeminarConfig();
-  }, []);
+  const seminarConfig = SEMINAR_CONFIG;
 
   useEffect(() => {
     // モバイルCTA：フォームが見えたら非表示
@@ -118,11 +123,6 @@ export default function SeminarPage() {
       return;
     }
 
-    if (!turnstileToken) {
-      alert('キャプチャを完了してください。');
-      return;
-    }
-
     setIsSubmitting(true);
 
     const form = e.currentTarget;
@@ -159,7 +159,6 @@ export default function SeminarPage() {
       utm_source: urlParams.get('utm_source') || '',
       utm_medium: urlParams.get('utm_medium') || '',
       utm_campaign: urlParams.get('utm_campaign') || '',
-      turnstileToken,
     };
 
     console.log('送信データ:', formData);
@@ -190,38 +189,14 @@ export default function SeminarPage() {
       } else {
         // エラー時の処理
         alert(result.message || '送信に失敗しました。もう一度お試しください。');
-        // Turnstileをリセット
-        turnstileRef.current?.reset();
-        setTurnstileToken('');
       }
     } catch (error) {
       console.error('送信エラー:', error);
       alert('送信に失敗しました。もう一度お試しください。');
-      // Turnstileをリセット
-      turnstileRef.current?.reset();
-      setTurnstileToken('');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  // ローディング中
-  if (isLoading || !seminarConfig) {
-    return (
-      <div className="page-layout">
-        <header className="site-header">
-          <div className="header-inner">
-            <div className="logo-area">
-              <img src="/bizlink_group.png" alt="ビズリンクグループ" />
-            </div>
-          </div>
-        </header>
-        <div style={{ padding: '40px', textAlign: 'center' }}>
-          <p>読み込み中...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -470,17 +445,6 @@ export default function SeminarPage() {
                 </div>
               </div>
 
-              {/* Cloudflare Turnstile */}
-              <div className="form-group" style={{ marginTop: '20px' }}>
-                <Turnstile
-                  ref={turnstileRef}
-                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
-                  onSuccess={(token) => setTurnstileToken(token)}
-                  onError={() => setTurnstileToken('')}
-                  onExpire={() => setTurnstileToken('')}
-                />
-              </div>
-
               {/* 同意チェックボックス */}
               <div className="consent-area">
                 <label className="consent-label">
@@ -496,7 +460,7 @@ export default function SeminarPage() {
 
               {/* 送信ボタン */}
               <div className="submit-area">
-                <button type="submit" className="submit-btn" disabled={isSubmitting || !turnstileToken}>
+                <button type="submit" className="submit-btn" disabled={isSubmitting}>
                   {isSubmitting ? '送信中...' : 'セミナーに申し込む（無料）'}
                 </button>
               </div>

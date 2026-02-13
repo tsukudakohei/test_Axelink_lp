@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge';
-
 // Cloudflare Turnstileの検証
 async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
   const secretKey = process.env.TURNSTILE_SECRET_KEY;
@@ -33,9 +31,7 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
 }
 
 // GASへのデータ送信
-async function submitToGAS(formData: any): Promise<{ success: boolean; message: string }> {
-  const gasUrl = process.env.GAS_WEB_APP_URL;
-
+async function submitToGAS(formData: any, gasUrl: string): Promise<{ success: boolean; message: string }> {
   if (!gasUrl) {
     throw new Error('GAS_WEB_APP_URL is not configured');
   }
@@ -68,21 +64,12 @@ async function submitToGAS(formData: any): Promise<{ success: boolean; message: 
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { turnstileToken, ...formData } = body;
+    const formData = await request.json();
 
-    // 1. Turnstile検証
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
-    const isValidCaptcha = await verifyTurnstile(turnstileToken, ip);
+    // GAS URL（環境変数または直接指定）
+    const gasUrl = process.env.GAS_WEB_APP_URL || 'https://script.google.com/macros/s/AKfycby9bsHJsQFnneVWTMXtPfE5oyIkpnXWwC2QYXSBVordWYEEZYmvGKTVfU4-kwzZhYyw/exec';
 
-    if (!isValidCaptcha) {
-      return NextResponse.json(
-        { success: false, message: 'キャプチャ検証に失敗しました。もう一度お試しください。' },
-        { status: 400 }
-      );
-    }
-
-    // 2. バリデーション
+    // 1. バリデーション
     const requiredFields = ['company_name', 'position', 'last_name', 'first_name', 'email', 'phone'];
     for (const field of requiredFields) {
       if (!formData[field]) {
@@ -93,14 +80,20 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 3. GASにデータを送信
-    const result = await submitToGAS(formData);
+    // 2. GASにデータを送信
+    const result = await submitToGAS(formData, gasUrl);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error('API Error:', error);
+    const errorMessage = error instanceof Error ? error.message : '不明なエラー';
     return NextResponse.json(
-      { success: false, message: '送信に失敗しました。しばらく経ってからもう一度お試しください。' },
+      {
+        success: false,
+        message: '送信に失敗しました。しばらく経ってからもう一度お試しください。',
+        error: errorMessage,
+        debug: process.env.NODE_ENV === 'development' ? String(error) : undefined
+      },
       { status: 500 }
     );
   }

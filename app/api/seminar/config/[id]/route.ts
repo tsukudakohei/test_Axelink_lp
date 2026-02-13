@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
 // セミナー設定を一元管理
 const SEMINAR_CONFIGS: Record<string, any> = {
   '20260224': {

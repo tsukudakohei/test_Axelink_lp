@@ -1,0 +1,5 @@
+/* Hide LP header and footer for seminar pages */
+body > header,
+body > footer {
+  display: none !important;
+}

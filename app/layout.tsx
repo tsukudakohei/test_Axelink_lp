@@ -4,7 +4,6 @@ import { Geist, Geist_Mono, Pacifico } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import IchisanFormScript from "@/components/IchisanFormScript";
 
 const pacifico = Pacifico({
   weight: '400',
@@ -25,7 +24,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Axelink | AIで事業成長にアクセルを",
-  description: "データとテクノロジーの力で、あなたの事業を次のステージへ。専門家と共に描く、デジタル変革の未来。AI・データ・DX相談実績多数、専門家DB4,000名以上。",
+  description: "データとテクノロジーの力で、あなたの事業を次のステージへ。専門家と共に描く、デジタル変革の未来。AI・データ・DX相談実績多数、専門家DB20,000名以上。",
   keywords: ["AI", "DX", "デジタル変革", "データ分析", "機械学習", "ビジネス成長", "コンサルティング"],
   authors: [{ name: "株式会社ビズリンク" }],
   icons: {
@@ -77,7 +76,6 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <IchisanFormScript />
       </body>
     </html>
   );

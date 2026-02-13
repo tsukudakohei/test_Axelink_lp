@@ -94,7 +94,7 @@ export default function Hero() {
                   <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
                   <div className="absolute inset-0 w-2 h-2 bg-purple-400 rounded-full animate-ping" style={{ animationDelay: '0.3s' }}></div>
                 </div>
-                <span className="text-purple-50 font-medium">専門家DB4,000名以上</span>
+                <span className="text-purple-50 font-medium">専門家DB20,000名以上</span>
               </div>
               <div className="group relative flex items-center gap-3 justify-center bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl px-6 py-3 border border-orange-400/30 hover:border-orange-300/50 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20 hover:scale-105">
                 <div className="relative">

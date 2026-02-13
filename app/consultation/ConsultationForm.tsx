@@ -20,112 +20,65 @@ export default function ConsultationForm() {
   const companyInputRef = useRef<HTMLInputElement>(null);
   const [isIchisanReady, setIsIchisanReady] = useState(false);
 
-  // ichisanフォームのスクリプトが読み込まれたか確認し、初期化する
+  // ichisanフォームのスクリプトを動的に読み込み・初期化
   useEffect(() => {
-    const initializeIchisanForm = () => {
-      const form = formRef.current;
-      if (!form) return false;
+    // スクリプトURL
+    const SCRIPT_URL = 'https://ichisan.jp/form/lib/ichisanForm.min.js';
+    const SCRIPT_ID = 'ichisan-form-script';
 
-      // ichisanFormがグローバルに存在するか確認
-      if (typeof window !== 'undefined' && (window as any).ichisanForm) {
+    // 既存のスクリプトがあれば削除（強制リロードのため）
+    const existingScript = document.getElementById(SCRIPT_ID);
+    if (existingScript) {
+      existingScript.remove();
+    }
+    
+    // グローバルオブジェクトもクリア（再初期化を促すため）
+    if ((window as any).ichisanForm) {
+      delete (window as any).ichisanForm;
+    }
+    if ((window as any).__ichisanFormLoaded) {
+      delete (window as any).__ichisanFormLoaded;
+    }
+
+    const loadScript = () => {
+      const script = document.createElement('script');
+      script.src = SCRIPT_URL;
+      script.id = SCRIPT_ID;
+      script.async = true;
+      
+      script.onload = () => {
         setIsIchisanReady(true);
-        
-        // フォームが既に初期化されているか確認
-        if (form.hasAttribute('data-ichisan-initialized')) {
-          return true;
-        }
-
-        // 複数の初期化方法を試す
-        try {
-          // 方法1: initメソッドがある場合
-          if (typeof (window as any).ichisanForm.init === 'function') {
-            (window as any).ichisanForm.init(form);
-            form.setAttribute('data-ichisan-initialized', 'true');
-            return true;
-          }
-          
-          // 方法2: 自動初期化をトリガー（data-readdy-form属性を再設定）
-          if (form.hasAttribute('data-readdy-form')) {
-            form.removeAttribute('data-readdy-form');
-            // 次のフレームで再設定して初期化をトリガー
-            requestAnimationFrame(() => {
-              form.setAttribute('data-readdy-form', '');
-              form.setAttribute('data-ichisan-initialized', 'true');
-            });
-            return true;
-          }
-        } catch (error) {
-          console.error('ichisanフォームの初期化エラー:', error);
-        }
-      }
-      return false;
-    };
-
-    // カスタムイベントリスナーを設定
-    const handleIchisanLoaded = () => {
-      setTimeout(initializeIchisanForm, 100);
-    };
-
-    // 既に読み込まれている場合
-    if (typeof window !== 'undefined' && (window as any).__ichisanFormLoaded) {
-      setTimeout(initializeIchisanForm, 100);
-    } else {
-      // カスタムイベントをリッスン
-      document.addEventListener('ichisanFormLoaded', handleIchisanLoaded);
-    }
-
-    // スクリプトの読み込みを待つ
-    let interval: NodeJS.Timeout | null = null;
-    let loadHandler: (() => void) | null = null;
-
-    const checkScript = () => {
-      const script = document.querySelector('script[src*="ichisanForm.min.js"]');
-      if (script) {
-        if (script.getAttribute('data-loaded') === 'true' || (window as any).__ichisanFormLoaded) {
-          // スクリプトは既に読み込まれている
-          setTimeout(initializeIchisanForm, 200);
-          return;
-        }
-        
-        loadHandler = () => {
-          script.setAttribute('data-loaded', 'true');
-          // 少し遅延を入れて初期化を確実にする
-          setTimeout(initializeIchisanForm, 200);
-        };
-        script.addEventListener('load', loadHandler);
-      } else {
-        // スクリプトがまだない場合、定期的にチェック
-        interval = setInterval(() => {
-          if (initializeIchisanForm()) {
-            if (interval) clearInterval(interval);
-          }
-        }, 200);
-
-        // 最大10秒待つ
+        // スクリプトロード後に少し待ってから初期化を試みる
         setTimeout(() => {
-          if (interval) clearInterval(interval);
-        }, 10000);
-      }
+          const form = formRef.current;
+          if (form && (window as any).ichisanForm && typeof (window as any).ichisanForm.init === 'function') {
+            try {
+              (window as any).ichisanForm.init(form);
+              form.setAttribute('data-ichisan-initialized', 'true');
+            } catch (e) {
+              console.error('ichisanForm init failed:', e);
+            }
+          }
+        }, 100);
+      };
+
+      document.body.appendChild(script);
     };
 
-    // DOMが準備できてからチェック
+    // DOMの準備ができていることを確認してからロード
     if (document.readyState === 'complete') {
-      checkScript();
+      loadScript();
     } else {
-      window.addEventListener('load', checkScript);
+      window.addEventListener('load', loadScript);
     }
 
-    // クリーンアップ
     return () => {
-      if (interval) clearInterval(interval);
-      if (loadHandler) {
-        const script = document.querySelector('script[src*="ichisanForm.min.js"]');
-        if (script) {
-          script.removeEventListener('load', loadHandler);
-        }
+      // クリーンアップ
+      window.removeEventListener('load', loadScript);
+      const script = document.getElementById(SCRIPT_ID);
+      if (script) {
+        script.remove();
       }
-      window.removeEventListener('load', checkScript);
-      document.removeEventListener('ichisanFormLoaded', handleIchisanLoaded);
     };
   }, []);
 
